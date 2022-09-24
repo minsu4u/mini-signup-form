@@ -1,9 +1,14 @@
 // TODO: 이 곳에 정답 코드를 작성해주세요.
 
 const input = document.getElementsByTagName('input')
+const $id = document.querySelector('#id')
 const $pw = document.querySelector('#pw')
 const $pwCheck = document.querySelector('#pw-check')
 const $modal = document.querySelector('#modal')
+const $confirmId = document.querySelector('#confirm-id')
+const $confirmPw = document.querySelector('#confirm-pw')
+const $cancel = document.querySelector('#cancel-btn')
+const $approve = document.querySelector('#approve-btn')
 let msg = ''
 let ID_REGEX = new RegExp('^[a-z0-9_-]{5,20}$')
 let PW_REGEX = new RegExp('^[a-zA-Z0-9]{8,16}$')
@@ -74,9 +79,9 @@ Array.from(input).map((item) => {
             e.preventDefault()
             focusOut(e)
             if (ID_REGEX && PW_REGEX && PW_CHECK) {
-                $modal.setAttribute('open', true)
-            } else {
-                $modal.removeAttribute('open')
+                $confirmId.innerText = $id.value
+                $confirmPw.innerText = $pw.value
+                $modal.showModal()
             }
         })
     } else {
@@ -86,3 +91,40 @@ Array.from(input).map((item) => {
         })
     }
 })
+
+// 이벤트 핸들러(click): $approve, $cancel
+
+$approve.addEventListener('click', () => {
+    window.alert('가입되었습니다 🥳 ')
+    $modal.close()
+    location.reload()
+})
+$cancel.addEventListener('click', () => $modal.close())
+
+// 폰트 사이즈 조절
+// 태그
+const $increaseFontBtn = document.querySelector('#increase-font-btn')
+const $decreaseFontBtn = document.querySelector('#decrease-font-btn')
+const $html = document.documentElement
+
+const MAX_FONT_SIZE = 20
+const MIN_FONT_SIZE = 12
+
+const getHtmlFontSize = () => {
+    return parseFloat(window.getComputedStyle($html).fontSize)
+}
+
+$increaseFontBtn.addEventListener('click', () => {
+    onClickFontSizeControl('increase')
+})
+$decreaseFontBtn.addEventListener('click', () => {
+    onClickFontSizeControl('decrease')
+})
+
+const onClickFontSizeControl = (flag) => {
+    const fontSize = getHtmlFontSize()
+    let newFontSize = flag === 'increase' ? fontSize + 1 : fontSize - 1
+    $html.style.fontSize = newFontSize
+    $decreaseFontBtn.disabled = newFontSize <= MIN_FONT_SIZE
+    $increaseFontBtn.disabled = newFontSize >= MAX_FONT_SIZE
+}
